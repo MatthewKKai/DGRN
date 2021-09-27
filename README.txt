@@ -1,1 +1,2 @@
 This is project aims to build a model for Biomedical Paper recommendation and generate explainable reasons. 
+We consider extracting information and link them from MeSH and generate triple which indicates the relation of entities.
