@@ -5,6 +5,7 @@ import json
 import collections
 import torch
 from torch import nn
+from transformers import BertTokenizer
 from nltk.tokenize import word_tokenize
 from nltk.tokenize import sent_tokenize
 from tensorflow.data import Dataset
@@ -43,7 +44,7 @@ class data_loader(Dataset):
         return corpus, relations
 
     def word2id(self, corpus):
-        bag_of_words = word_tokenize(corpus)
+        bag_of_words = self.word_tokenizer(corpus)
         count = sorted(self.counter(bag_of_words))
         words = list(count.keys())
         word2id = zip(words, range(len(words)))
