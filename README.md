@@ -6,6 +6,7 @@ Further steps span around reason generation and citation network information as 
 
 Extractor Settings:
 Tokenizer + BertSeqClassification
+Seq2Seq Wrap
 
 Generator Settings:
 Data Augmentation + Encoder-Decoder
