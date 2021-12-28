@@ -9,5 +9,7 @@ Tokenizer + BertSeqClassification
 Seq2Seq Wrap
 Data Augmentation
 
+Negative Samples and data masks
+
 Generator Settings:
 Data Augmentation + Encoder-Decoder
