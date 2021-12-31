@@ -6,7 +6,7 @@ Further steps span around reason generation and citation network information as 
 ## Extractor:
 Extractor Settings:
 Tokenizer + BertSeqClassification
-Seq2Seq Wrap
+Graph based model
 Data Augmentation
 
 Negative Samples and data masks
