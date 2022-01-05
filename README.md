@@ -10,6 +10,7 @@ Extractor Settings:
 Tokenizer + BertSeqClassification
 Graph based model
 Data Augmentation
+SDP for better selection
 
 Negative Samples and data masks
 
