@@ -5,16 +5,10 @@ Further steps span around reason generation and citation network information as 
 Citation Context Analysis
 
 
-## Extractor:
-Extractor Settings:
-Tokenizer + BertSeqClassification
-Graph based model
-Data Augmentation
+## RE within One Paper
+End-to-End Structure
 
-SDP for better selection
+## RE within Two Paper
 
-Negative Samples and data masks
 
-## Generator
-Generator Settings:
-Data Augmentation + Encoder-Decoder
+## Explainable Text Generation
