@@ -6,7 +6,10 @@ Citation Context Analysis
 
 
 ## RE within One Paper
-End-to-End Structure
+End-to-End Structure:
+  * SDP Selction
+  * Encoder+Attention Gate
+  * Decoder with graph representation
 
 ## RE within Two Paper
 
