@@ -9,7 +9,7 @@ Citation Context Analysis
 End-to-End Structure:
   * XML Parser
   * SDP Selction
-  * Encoder with Attention Gate
+  * Encoder with attention Gate
   * Decoder with graph representation
 
 ## RE within Two Paper
