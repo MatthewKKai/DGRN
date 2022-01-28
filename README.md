@@ -13,6 +13,6 @@ End-to-End Structure:
   * Decoder with graph representation
 
 ## RE within Two Paper
-
+End-to-End Structure:
 
 ## Explainable Text Generation
