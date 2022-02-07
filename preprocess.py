@@ -2,14 +2,25 @@ import json
 import pandas as pd
 import numpy as np
 import re
+import os
 import csv
 import nltk
 import pubmed_parser as pp
 
-corpus_path = r"../data/cancer_corpus.json"
+root_dir = r"../data"
 triple_path = r"../data/sldb_complete_triple.csv"
 
-def get_corpus(corpus_path):
+def get_triple(triple_path):
+    # entity length too long for processing, drop the relation between these entities
+    drop_rel_list = ["PARTICIPATES_CpD", "PARTICIPATES_GpBP", "PARTICIPATES_GpCC", "PARTICIPATES_GpMF",
+                     "PARTICIPATES_GpPW", "CAUSES_CcSE", "PRESENTS_DpS"]
+    triple_data = pd.read_csv(triple_path, encoding="utf-8", error_bad_lines=False)
+    for drop_item in drop_rel_list:
+        triple_data = triple_data.drop(triple_data[triple_data["edge_type"] == drop_item].index)
+
+    return triple_data
+
+def get_paper_info(corpus_path):
     # abstract_pair = {}
     # with open(corpus_path, encoding = "utf-8") as f:
     #     data = json.load(f)
@@ -35,8 +46,11 @@ def get_corpus(corpus_path):
     abstract = get_abstract(corpus_path)
     intro = get_intro(corpus_path)
     citances = get_citances(corpus_path)
+    paper = {"abstract": abstract,
+                     "intro": intro,
+                     "citances": citances}
 
-    return abstract_pair
+    return paper
 
 
 def get_intro(corpus_path):
@@ -51,34 +65,66 @@ def get_abstract(corpus_path):
     return pp.parse_pubmed_xml(corpus_path)["abstract"]    # str type
 
 def get_citances(corpus_path):
-    pass
+    text = []
+    citances = []
+    for item in pp.parse_pubmed_paragraph(corpus_path):
+        text.append(item["text"])
+    text = ".".join(text)
+    sentence_ls = text.split(".")
+    for item in sentence_ls:
+        if "et al" in item:
+            citances.append(item)
+    return citances
 
-def triple_annotator(triple_path, corpus):
-    triple_data = pd.read_csv(triple_path, encoding="utf-8")
-    annotated_data = {}
-    for key in corpus.keys():
-        tmp_citing = corpus[key]["citing_abstract"]
-        tmp_cited = corpus[key]["citied_abstract"]
-        tmp_citing_annotated = tmp_citing
-        tmp_cited_annotated = tmp_cited
-        for i in range(len(triple_data)):
-            if triple_data["head_name"][i] in tmp_citing and triple_data["tail_name"][i] in tmp_citing:
-                tmp_citing_annotated = tmp_citing_annotated + "\n" + triple_data["head_name"][i] + "," + triple_data["edge_type"][
-                    i] + "," + triple_data["tail_name"][i]
-                print(tmp_citing_annotated)
-            if triple_data["head_name"][i] in tmp_cited and triple_data["tail_name"][i] in tmp_cited:
-                tmp_cited_annotated = tmp_cited_annotated + "\n" + triple_data["head_name"][i] + "," + triple_data["edge_type"][
-                    i] + "," + triple_data["tail_name"][i]
-        annotated_data[key] = {"citing_data":tmp_citing_annotated, "cited_data":tmp_cited_annotated}
-    return annotated_data
 
-abstract_pair = get_corpus(corpus_path)
-annotated_data = triple_annotator(triple_path, abstract_pair)
+def triple_annotator(triple_data, paper):
+    # triple_data = pd.read_csv(triple_path, encoding="utf-8")
+    # annotated_data = {}
+    # for key in corpus.keys():
+    #     tmp_citing = corpus[key]["citing_abstract"]
+    #     tmp_cited = corpus[key]["citied_abstract"]
+    #     tmp_citing_annotated = tmp_citing
+    #     tmp_cited_annotated = tmp_cited
+    #     for i in range(len(triple_data)):
+    #         if triple_data["head_name"][i] in tmp_citing and triple_data["tail_name"][i] in tmp_citing:
+    #             tmp_citing_annotated = tmp_citing_annotated + "\n" + triple_data["head_name"][i] + "," + triple_data["edge_type"][
+    #                 i] + "," + triple_data["tail_name"][i]
+    #             print(tmp_citing_annotated)
+    #         if triple_data["head_name"][i] in tmp_cited and triple_data["tail_name"][i] in tmp_cited:
+    #             tmp_cited_annotated = tmp_cited_annotated + "\n" + triple_data["head_name"][i] + "," + triple_data["edge_type"][
+    #                 i] + "," + triple_data["tail_name"][i]
+    #     annotated_data[key] = {"citing_data":tmp_citing_annotated, "cited_data":tmp_cited_annotated}
 
-with open("../data/annotated_data.csv", "w") as f:
-    writer = csv.writer(f)
-    for key, value in annotated_data.items():
-        writer.writerow([key, value])
+    paper_info = ".".join(paper.values())
+    label = ""
+    for i in range(len(triple_data)):
+        if triple_data["head_name"][i].lower() in paper_info.lower() and triple_data["tail_name"][i].lower() in paper_info.lower():
+            label = label+"("+triple_data["head_name"][i]+","+triple_data["edge_type"][i]+","+triple_data["tail_name"][i]+");"
+    annotated_paper = {"paper":paper_info,"triple":label}
+    return annotated_paper
+
+def dump_data(root_dir, triple_path):
+    triple_data = get_triple(triple_path)
+    for paper_dir in os.listdir(root_dir):
+        if paper_dir.startswith("PMC") and paper_dir.endswith("xxxxxx"):
+            for paper_path in os.listdir(os.path.join(root_dir,paper_dir)):
+                paper = get_paper_info(paper_path)
+                annotated_paper = triple_annotator(triple_data, paper)
+                with open("../data/annotated_paper.json", "r", encoding="utf-8") as f:
+                    try:
+                        existed_data = json.load(f)
+                    except Exception as e:
+                        existed_data = {}
+                    existed_data.update(annotated_paper)
+                with open("../data/annotated_paper.json", "w", encoding="utf-8") as f:
+                    json.dump(existed_data, f)
+
+if __name__=="__main__":
+    dump_data(root_dir,triple_path)
+# with open("../data/annotated_data.csv", "w") as f:
+#     writer = csv.writer(f)
+#     for key, value in annotated_data.items():
+#         writer.writerow([key, value])
 
 # print(len(abstract_pair))
 # print(len(annotated_data))
