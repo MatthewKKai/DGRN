@@ -139,10 +139,3 @@ def dump_data(root_dir, triple_path):
 
 if __name__=="__main__":
     dump_data(root_dir,triple_path)
-# with open("../data/annotated_data.csv", "w") as f:
-#     writer = csv.writer(f)
-#     for key, value in annotated_data.items():
-#         writer.writerow([key, value])
-
-# print(len(abstract_pair))
-# print(len(annotated_data))
