@@ -5,10 +5,11 @@ import re
 import os
 import csv
 import nltk
+from tqdm import tqdm
 import pubmed_parser as pp
 
-root_dir = r"../data"
-triple_path = r"../data/sldb_complete_triple.csv"
+root_dir = r"data"
+triple_path = r"data/sldb_complete_triple.csv"
 
 def get_triple(triple_path):
     # entity length too long for processing, drop the relation between these entities
@@ -17,7 +18,7 @@ def get_triple(triple_path):
     triple_data = pd.read_csv(triple_path, encoding="utf-8", error_bad_lines=False)
     for drop_item in drop_rel_list:
         triple_data = triple_data.drop(triple_data[triple_data["edge_type"] == drop_item].index)
-
+    triple_data = triple_data.reset_index().drop("index", axis=1)
     return triple_data
 
 def get_paper_info(corpus_path):
@@ -55,10 +56,10 @@ def get_paper_info(corpus_path):
 
 def get_intro(corpus_path):
     intro = []
-    for item in pp.pubmed_oa_parser(corpus_path):
+    for item in pp.parse_pubmed_paragraph(corpus_path):
         if item["section"] == "Introduction":
             intro.append(item["text"])
-    return intro    #list type
+    return ".".join(intro)    #list type
 
 
 def get_abstract(corpus_path):
@@ -72,9 +73,9 @@ def get_citances(corpus_path):
     text = ".".join(text)
     sentence_ls = text.split(".")
     for item in sentence_ls:
-        if "et al" in item:
+        if "et al" in item and len(item)>40:
             citances.append(item)
-    return citances
+    return ".".join(citances)  # list type
 
 
 def triple_annotator(triple_data, paper):
@@ -94,30 +95,47 @@ def triple_annotator(triple_data, paper):
     #             tmp_cited_annotated = tmp_cited_annotated + "\n" + triple_data["head_name"][i] + "," + triple_data["edge_type"][
     #                 i] + "," + triple_data["tail_name"][i]
     #     annotated_data[key] = {"citing_data":tmp_citing_annotated, "cited_data":tmp_cited_annotated}
-
-    paper_info = ".".join(paper.values())
     label = ""
+    paper_info = ".".join(paper.values())
+    # print(paper_info)
     for i in range(len(triple_data)):
-        if triple_data["head_name"][i].lower() in paper_info.lower() and triple_data["tail_name"][i].lower() in paper_info.lower():
-            label = label+"("+triple_data["head_name"][i]+","+triple_data["edge_type"][i]+","+triple_data["tail_name"][i]+");"
+        try:
+            if triple_data["head_name"][i].lower() in paper_info.lower() and triple_data["tail_name"][i].lower() in paper_info.lower():
+                label = label+"("+triple_data["head_name"][i]+","+triple_data["edge_type"][i]+","+triple_data["tail_name"][i]+");"
+        except Exception as e:
+            print(e)
     annotated_paper = {"paper":paper_info,"triple":label}
     return annotated_paper
 
 def dump_data(root_dir, triple_path):
     triple_data = get_triple(triple_path)
+    total_num = 0
     for paper_dir in os.listdir(root_dir):
         if paper_dir.startswith("PMC") and paper_dir.endswith("xxxxxx"):
-            for paper_path in os.listdir(os.path.join(root_dir,paper_dir)):
-                paper = get_paper_info(paper_path)
-                annotated_paper = triple_annotator(triple_data, paper)
-                with open("../data/annotated_paper.json", "r", encoding="utf-8") as f:
-                    try:
-                        existed_data = json.load(f)
-                    except Exception as e:
-                        existed_data = {}
-                    existed_data.update(annotated_paper)
-                with open("../data/annotated_paper.json", "w", encoding="utf-8") as f:
-                    json.dump(existed_data, f)
+            total_num += len(os.listdir(os.path.join(root_dir, paper_dir)))
+    with tqdm(total=total_num) as pbar:
+        pbar.set_description("data_prerprocessing:")
+        for paper_dir in os.listdir(root_dir):
+            if paper_dir.startswith("PMC") and paper_dir.endswith("xxxxxx"):
+                for paper_path in os.listdir(os.path.join(root_dir,paper_dir)):
+                    paper = get_paper_info(os.path.join(root_dir, paper_dir, paper_path))
+                    annotated_paper = triple_annotator(triple_data, paper)
+                    if os.path.exists(r"data/annotated_paper.json"):
+                        with open("data/annotated_paper.json", "r", encoding="utf-8") as f:
+                            try:
+                                existed_data = json.load(f)
+                            except Exception as e:
+                                existed_data = {}
+                            existed_data.update(annotated_paper)
+                    else:
+                        with open("data/annotated_paper.json", "w", encoding="utf-8") as f:
+                            existed_data = {}
+                            json.dump({}, f)
+                            existed_data.update(annotated_paper)
+                    with open("data/annotated_paper.json", "w", encoding="utf-8") as f:
+                        json.dump(existed_data, f)
+                        # print("dump success")
+                        pbar.update(1)
 
 if __name__=="__main__":
     dump_data(root_dir,triple_path)
