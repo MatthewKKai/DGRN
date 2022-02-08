@@ -4,6 +4,8 @@ import numpy as np
 import re
 import os
 import csv
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 import nltk
 from tqdm import tqdm
 import pubmed_parser as pp
@@ -77,6 +79,18 @@ def get_citances(corpus_path):
             citances.append(item)
     return ".".join(citances)  # list type
 
+def paper_tokenizer(paper_info):
+    try:
+        stop_words = set(stopwords.words("english"))
+        tokenized_paper = word_tokenize(paper_info)
+    except Exception as e:
+        print(e)
+        nltk.download()
+    paper_tokens = []
+    for token in tokenized_paper:
+        if token not in stop_words:
+            paper_tokens.append(token.lower())
+    return paper_tokens  # list type
 
 def triple_annotator(triple_data, paper):
     # triple_data = pd.read_csv(triple_path, encoding="utf-8")
@@ -96,16 +110,18 @@ def triple_annotator(triple_data, paper):
     #                 i] + "," + triple_data["tail_name"][i]
     #     annotated_data[key] = {"citing_data":tmp_citing_annotated, "cited_data":tmp_cited_annotated}
     label = ""
-    paper_info = ".".join(paper.values())
+    paper_info = ".".join(paper.values()) # paper wokens in lower() form
     # print(paper_info)
+    paper_tokens = paper_tokenizer(paper_info)
     for i in range(len(triple_data)):
         try:
-            if triple_data["head_name"][i].lower() in paper_info.lower() and triple_data["tail_name"][i].lower() in paper_info.lower():
+            if triple_data["head_name"][i].lower() in paper_tokens and triple_data["tail_name"][i].lower() in paper_tokens:
                 label = label+"("+triple_data["head_name"][i]+","+triple_data["edge_type"][i]+","+triple_data["tail_name"][i]+");"
         except Exception as e:
             print(e)
     annotated_paper = {"paper":paper_info,"triple":label}
     return annotated_paper
+
 
 def dump_data(root_dir, triple_path):
     triple_data = get_triple(triple_path)
