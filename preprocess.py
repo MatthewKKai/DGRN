@@ -4,9 +4,9 @@ import numpy as np
 import re
 import os
 import csv
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-import nltk
 from tqdm import tqdm
 import pubmed_parser as pp
 
@@ -136,22 +136,15 @@ def dump_data(root_dir, triple_path):
                 for paper_path in os.listdir(os.path.join(root_dir,paper_dir)):
                     paper = get_paper_info(os.path.join(root_dir, paper_dir, paper_path))
                     annotated_paper = triple_annotator(triple_data, paper)
-                    if os.path.exists(r"data/annotated_paper.json"):
-                        with open("data/annotated_paper.json", "r", encoding="utf-8") as f:
-                            try:
-                                existed_data = json.load(f)
-                            except Exception as e:
-                                existed_data = {}
-                            existed_data.update(annotated_paper)
-                    else:
-                        with open("data/annotated_paper.json", "w", encoding="utf-8") as f:
-                            existed_data = {}
-                            json.dump({}, f)
-                            existed_data.update(annotated_paper)
-                    with open("data/annotated_paper.json", "w", encoding="utf-8") as f:
-                        json.dump(existed_data, f)
-                        # print("dump success")
-                        pbar.update(1)
+                    if annotated_paper["triple"] is not "":
+                        if os.path.exists(r"data/annotated_paper.json"):
+                            with open("data/annotated_paper.json", "a", encoding="utf-8") as f:
+                                json.dump(annotated_paper, f, indent=0)
+                                # print("dump success")
+                                pbar.update(1)
+                        else:
+                            with open("data/annotated_paper.json", "w", encoding="utf-8") as f:
+                                json.dump(annotated_paper, f, indent=0)
 
 if __name__=="__main__":
     dump_data(root_dir,triple_path)
