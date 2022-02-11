@@ -61,7 +61,7 @@ def get_intro(corpus_path):
     for item in pp.parse_pubmed_paragraph(corpus_path):
         if item["section"] == "Introduction":
             intro.append(item["text"])
-    return ".".join(intro)    #list type
+    return ".".join(intro)    #list type, we may use dict for better return
 
 
 def get_abstract(corpus_path):
