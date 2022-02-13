@@ -119,8 +119,10 @@ def triple_annotator(triple_data, paper):
                 label = label+"("+triple_data["head_name"][i]+","+triple_data["edge_type"][i]+","+triple_data["tail_name"][i]+");"
         except Exception as e:
             print(e)
-    annotated_paper = {"paper":paper_info,"triple":label}
+    annotated_paper = {"paper":paper,"triple":label}
+    print(annotated_paper)
     return annotated_paper
+
 
 
 def dump_data(root_dir, triple_path):
