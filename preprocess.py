@@ -76,7 +76,7 @@ def get_citances(corpus_path):
     sentence_ls = text.split(".")
     for item in sentence_ls:
         ref_num_identifier = re.findall(r"\[\d+\]", item)
-        if ("et al" in item or len(ref_num_identifier) is not 0) and len(item)>100:
+        if ("et al" in item or len(ref_num_identifier) != 0) and len(item)>100:
             citances.append(item)
     return ".".join(citances)  # str type
 
