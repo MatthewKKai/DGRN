@@ -75,9 +75,10 @@ def get_citances(corpus_path):
     text = ".".join(text)
     sentence_ls = text.split(".")
     for item in sentence_ls:
-        if "et al" in item and len(item)>40:
+        ref_num_identifier = re.findall(r"\[\d+\]", item)
+        if ("et al" in item or len(ref_num_identifier) is not 0) and len(item)>100:
             citances.append(item)
-    return ".".join(citances)  # list type
+    return ".".join(citances)  # str type
 
 def paper_tokenizer(paper_info):
     try:
@@ -120,7 +121,7 @@ def triple_annotator(triple_data, paper):
         except Exception as e:
             print(e)
     annotated_paper = {"paper":paper,"triple":label}
-    print(annotated_paper)
+    # print(annotated_paper)
     return annotated_paper
 
 
@@ -143,10 +144,11 @@ def dump_data(root_dir, triple_path):
                             with open("data/annotated_paper.json", "a", encoding="utf-8") as f:
                                 json.dump(annotated_paper, f, indent=0)
                                 # print("dump success")
-                                pbar.update(1)
+                                # pbar.update(1)
                         else:
                             with open("data/annotated_paper.json", "w", encoding="utf-8") as f:
                                 json.dump(annotated_paper, f, indent=0)
+                    pbar.update(1)
 
 if __name__=="__main__":
     dump_data(root_dir,triple_path)
