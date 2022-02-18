@@ -1,6 +1,7 @@
 import json
 import os
 import nltk
+from collections import Counter
 from nltk import word_tokenize, sent_tokenize
 
 
@@ -12,15 +13,19 @@ from nltk import word_tokenize, sent_tokenize
 #     with open(os.path(self.root, "word2id.json"), "w") as f:
 #         json.dump(word2id, f)
 
-
 def rel2id(self, relation):
-    bag_of_relations = word_tokenize(relation)
-    count = sorted(self.counter(bag_of_relations))
-    relations = list(count.keys())
-    rel2id = zip(relations, "R"+str(range(len(relations))))
-    with open(os.path(self.root, "rel2id.json"), "w") as f:
-        json.dump(relations, f)
+    counter = Counter(relation)
+    rel2id = dict()
+    for i, j in zip(counter.keys(), range(len(counter.keys()))):
+        rel2id[i] = "R"+str(j)
+    # with open(os.path(self.root, "rel2id.json"), "w") as f:
+    #     json.dump(rel2id, f)
+    return rel2id
 
+# entity type embedding
+def etype2vec(self, entity_ls):
+    pass
 
-def entity2type(self, entity_dict):
+# word embedding
+def word2vec():
     pass
