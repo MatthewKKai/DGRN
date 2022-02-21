@@ -12,7 +12,7 @@ Citation Context Analysis
 ## RE within One Paper
 End-to-End Structure:
   * XML Parser
-  * SDP Selction
+  * Daul Graph Structure
   * Encoder with Attention Gate
   * Decoder with graph representation
 
