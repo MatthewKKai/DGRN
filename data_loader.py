@@ -4,7 +4,6 @@ import numpy as np
 import json
 import collections
 import torch
-from torch import nn
 from transformers import BertTokenizer
 from tensorflow.data import Dataset
 
@@ -27,21 +26,8 @@ class data_loader(Dataset):
     def __len__(self):
         return self.length
 
-    def split_data_label(self):
-        corpus = ""
-        relations = ""
-        for pair in self.doc_rel_pair:
-            tmp = pair.split("*****")
-            try:
-                corpus = corpus + " " + tmp[0]
-                relations = relations + " " + tmp[1]
-            except Exception as e:
-                print(e)
-                return corpus, relations
-        return corpus, relations
-
     '''
-    # move it to data_loader
+    # move it to data_gen
     def word2id(self, corpus):
         bag_of_words = self.word_tokenizer(corpus)
         count = sorted(self.counter(bag_of_words))
