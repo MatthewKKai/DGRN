@@ -4,7 +4,7 @@ import os
 
 import numpy as np
 
-data_dir = '../data/'
+data_dir = '../data_/'
 # prepro_dir = os.path.join(data_dir, 'prepro_data/')
 # if not os.path.exists(prepro_dir):
 #     os.mkdir(prepro_dir)
@@ -25,10 +25,10 @@ def get_opt():
     parser.add_argument('--dev_set', type=str, default=os.path.join(data_dir, 'dev.json'))
     parser.add_argument('--test_set', type=str, default=os.path.join(data_dir, 'test.json'))
 
-    # save path of preprocessed datasets
-    parser.add_argument('--train_set_save', type=str, default=os.path.join(prepro_dir, 'train.pkl'))
-    parser.add_argument('--dev_set_save', type=str, default=os.path.join(prepro_dir, 'dev.pkl'))
-    parser.add_argument('--test_set_save', type=str, default=os.path.join(prepro_dir, 'test.pkl'))
+    # # save path of preprocessed datasets
+    # parser.add_argument('--train_set_save', type=str, default=os.path.join(prepro_dir, 'train.pkl'))
+    # parser.add_argument('--dev_set_save', type=str, default=os.path.join(prepro_dir, 'dev.pkl'))
+    # parser.add_argument('--test_set_save', type=str, default=os.path.join(prepro_dir, 'test.pkl'))
 
     # checkpoints
     parser.add_argument('--checkpoint_dir', type=str, default='checkpoint')
