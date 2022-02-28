@@ -281,4 +281,6 @@ text = r"Type 2 diabetes is an increasingly common, serious metabolic disorder\
   multiple small effects confirms the genetic complexity of type 2 diabetes and the need for even larger studies".replace(r"\u2014", r"-")
 a = "INS"
 n,m,s,e1,e2,p = sdp(text,["INS","INSR"])
+n_,m_,s_,e1_,p_ = get_parsed(text, a)
 print("n is {0}, m is {1}, s is {2}, e1 is {3}, e2 is {4}, p is {5}".format(n,m,s,e1,e2,p))
+print("n is {0}, m is {1}, s is {2}, e1 is {3}, p is {4}".format(n_,m_,s_,e1_,p_))
