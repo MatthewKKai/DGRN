@@ -86,7 +86,7 @@ def get_opt():
 
     # BERT
     parser.add_argument('--bert_hid_size', type=int, default=768)
-    parser.add_argument('--bert_path', type=str, default="")
+    parser.add_argument('--bio_bert_path', type=str, default="")
     parser.add_argument('--bert_fix', action='store_true')
     parser.add_argument('--coslr', action='store_true')
     parser.add_argument('--clip', type=float, default=-1)
