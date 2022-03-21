@@ -5,9 +5,11 @@ Further steps span around reason generation and citation network information as 
 Citation Context Analysis
 
 ## Requisite
- * Huggings Face
+ * Transformers
  * Pytorch
- * Tensorflow
+ * SciSpacy
+ * Spacy
+ * DGL
 
 ## RE within One Paper
 End-to-End Structure:
