@@ -5,26 +5,26 @@ import json
 import collections
 import torch
 from transformers import BertTokenizer
-from tensorflow.data import Dataset
+from torch.utils.data import DataLoader
 
-class data_loader(Dataset):
-    def __init__(self, root, file_name):
-        self.root = self.root
-        with open(os.path.join(root, file_name), "r") as f:
-            self.raw_data = f.read()
-        self.doc_rel_pair = self.raw_data.split("\n")
-        self.length = len(self.doc_rel_pair)
-        self.counter = collections.Counter
-        self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+class data_loader(DataLoader):
+    def __init__(self, dataset,batch_size, shuffle = False, max_length = 512):
+        super(data_loader, self).__init__(dataset, batch_size = batch_size)
+        self.shuffle = shuffle
+        self.max_length = max_length
+        self.data_length = len(self.dataset)
+        # self.root = self.root
+        # with open(os.path.join(root, file_name), "r") as f:
+        #     self.raw_data = f.read()
+        # self.doc_rel_pair = self.raw_data.split("\n")
+        # self.length = len(self.doc_rel_pair)
+        # self.counter = collections.Counter
+        # self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
 
 
-    def __getitem__(self, item):
-
-        pass
-
-    def __len__(self):
-        return self.length
+    def __iter__(self):
+        yield()
 
     '''
     # move it to data_gen
