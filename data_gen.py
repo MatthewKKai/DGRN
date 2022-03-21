@@ -21,6 +21,19 @@ class data_set(Dataset):
             print("Please Using 'en_ner_bionlp13cg_md' version")
         self.max_length = max_length
 
+        if os.path.exists(data_path):
+            with open(data_path, "r", encoding="utf-8") as f:
+                try:
+                    self.data = json.load(data_path)
+                except Exception as e:
+                    print(e)
+        else:
+            pass
+
+        for i, data_item in enumerate(self.data):
+            paper = data_item["paper"]
+            label = data_item["triple"]
+
     def __getitem__(self, item):
         pass
 
@@ -30,8 +43,20 @@ class data_set(Dataset):
     def create_graph(self):
         pass
 
-    def tokenizer(self):
-        pass
+    def tokenizer(self, text):
+        doc = self.nlp(text)
+        entity_list = doc.ents
+        # retokenize based on entity_list
+        tokens_ = []
+        with doc.retokenize() as retokenizer:
+            for ent in doc.ents:
+                retokenizer.merge(doc[ent.start:ent.end])
+        for token in doc:
+            tokens_.append(token)
+
+        # miss the part of cut the sentence
+        tokens = "[CLS]"+tokens_+"[SEP]"
+        return entity_list, tokens
 
 
 
