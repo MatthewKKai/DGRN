@@ -1,10 +1,39 @@
 import json
 import os
-import nltk
 import networkx as nx
 import dgl
+import scispacy, spacy
 from collections import Counter
-from nltk import word_tokenize, sent_tokenize
+from torch.utils.data import Dataset
+
+
+class data_set(Dataset):
+    def __int__(self, data_path, max_length):
+        super(data_set, self).__int__()
+        self.data_path = data_path
+        self.data = None
+        self.INTER_EDGE = 0
+        self.INTRA_EDGE = 1
+        try:
+            self.nlp = spacy.load("en_ner_bionlp13cg_md") # For tokenize and entity graph building
+        except Exception as e:
+            print(e)
+            print("Please Using 'en_ner_bionlp13cg_md' version")
+        self.max_length = max_length
+
+    def __getitem__(self, item):
+        pass
+
+    def __len__(self):
+        pass
+
+    def create_graph(self):
+        pass
+
+    def tokenizer(self):
+        pass
+
+
 
 
 # def word2id(self, corpus):
@@ -15,19 +44,20 @@ from nltk import word_tokenize, sent_tokenize
 #     with open(os.path(self.root, "word2id.json"), "w") as f:
 #         json.dump(word2id, f)
 
-def rel2id(self, relation):
-    counter = Counter(relation)
-    rel2id = dict()
-    for i, j in zip(counter.keys(), range(len(counter.keys()))):
-        rel2id[i] = "R"+str(j)
-    # with open(os.path(self.root, "rel2id.json"), "w") as f:
-    #     json.dump(rel2id, f)
-    return rel2id
+# def rel2id(self, relation):
+#     counter = Counter(relation)
+#     rel2id = dict()
+#     for i, j in zip(counter.keys(), range(len(counter.keys()))):
+#         rel2id[i] = "R"+str(j)
+#     # with open(os.path(self.root, "rel2id.json"), "w") as f:
+#     #     json.dump(rel2id, f)
+#     return rel2id
+#
+# # entity type embedding
+# def etype2vec(self, entity_ls):
+#     pass
+#
+# # word embedding
+# def word2vec():
+#     pass
 
-# entity type embedding
-def etype2vec(self, entity_ls):
-    pass
-
-# word embedding
-def word2vec():
-    pass
