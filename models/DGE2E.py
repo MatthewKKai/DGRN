@@ -28,12 +28,3 @@ class DGE2E_Decoder(nn.Moudle):
         pass
 
 
-class graph():
-    def __int__(self):
-        pass
-
-    def create_dynamic_graph(self):
-        pass
-
-    def create_statistic_graph(self):
-        pass
