@@ -34,12 +34,16 @@ class data_set(Dataset):
         else:
             pass
 
-        # slef.data[index] = [{graph:graph, paper: {abstract:{}, intro:{}, citances:{}}, label:triple}]
+        # slef.data[index] = [{paper:{graph:graph, path:path_info, abstract:{}, intro:{}, citances:{}}, label:triple}]
 
         for i, data_item in enumerate(ori_data):
-            doc = self.nlp(data_item["paper"][""])
-            paper = data_item["paper"]
-            label = data_item["triple"]
+            paper = {}
+            doc_abstract = self.nlp(data_item["paper"]["abstract"])
+            doc_intro = None if data_item["paper"]["intro"] is "" else self.nlp(data_item["paper"]["intro"])
+            doc_citances = self.nlp(data_item["paper"]["citances"])
+
+            # paper = data_item["paper"]
+            # label = data_item["triple"]
 
 
 
