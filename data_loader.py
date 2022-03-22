@@ -10,6 +10,7 @@ from torch.utils.data import DataLoader
 class data_loader(DataLoader):
     def __init__(self, dataset,batch_size, shuffle = False, max_length = 512):
         super(data_loader, self).__init__(dataset, batch_size = batch_size)
+        self.dataset = dataset
         self.shuffle = shuffle
         self.max_length = max_length
         self.data_length = len(self.dataset)
