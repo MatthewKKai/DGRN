@@ -50,6 +50,9 @@ class data_set(Dataset):
     def __len__(self):
         return len(self.data)
 
+    def __iter__(self):
+        return iter(self.data)
+
     def create_graph(self, doc):
         entity_list, _, input_ids = self.tokenize(doc)
         graph = dgl.graph()
@@ -88,6 +91,12 @@ class data_set(Dataset):
                 entity_list[token]==ids[i]
 
         return entity_list, tokens_list, input_ids     # dic, list, list
+
+    # convert triple to ids
+    def triple_to_ids(self, triple):
+        pass
+
+
 
 
 
