@@ -11,9 +11,10 @@ import Config
 
 
 class DGE2E_Encoder(nn.Module):
-    def __init__(self):
+    def __init__(self,Config):
         self.config = Config
         self.bio_bert = BertModel.from_pretrained(self.config.bio_bert_path)
+
 
 
     def encde(self):
