@@ -38,9 +38,16 @@ class data_set(Dataset):
 
         for i, data_item in enumerate(ori_data):
             paper = {}
-            doc_abstract = self.nlp(data_item["paper"]["abstract"])
+            doc_abstract = None if data_item["paper"]["abstract"] is "" else self.nlp(data_item["paper"]["abstract"])
             doc_intro = None if data_item["paper"]["intro"] is "" else self.nlp(data_item["paper"]["intro"])
-            doc_citances = self.nlp(data_item["paper"]["citances"])
+            doc_citances = None if data_item["paper"]["citances"] is "" else self.nlp(data_item["paper"]["citances"])
+
+            entity_list_abs, tokens_list_abs, input_ids_abs = self.tokenize(doc_abstract)
+            entity_list_intro, tokens_list_intro, input_ids_intro = self.tokenize(doc_intro)
+            entity_list_cit, tokens_list_cit, input_ids_cit = self.tokenize(doc_citances)
+
+            entity_list = entity_list_abs + entity_list_intro + entity_list_cit
+            graph, path = self.create_graph(entity_list)
 
             # paper = data_item["paper"]
             # label = data_item["triple"]
@@ -57,8 +64,7 @@ class data_set(Dataset):
     def __iter__(self):
         return iter(self.data)
 
-    def create_graph(self, doc):
-        entity_list, _, input_ids = self.tokenize(doc)
+    def create_graph(self, entity_list):
         graph = dgl.graph()
 
 
