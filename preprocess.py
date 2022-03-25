@@ -3,7 +3,8 @@ import pandas as pd
 import numpy as np
 import re
 import os
-import csv
+import torch
+import dgl
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -171,7 +172,23 @@ def create_statistic_graph(triple_path):
     for i, e in enumerate(relation_count):
         relation_ids[e] = "R"+str(i)
 
-    # update triple data
+    # create graph (src, dst)
+    src = []
+    dst = []
+    r = []
+    for item in triple_data:
+        head_name = item["head_name"]
+        tail_name = item["tail_name"]
+        relation = item["edge_type"]
+        src.append(entity_ids[head_name])
+        dst.append(entity_ids[tail_name])
+        r.append(relation_ids[relation])
+    g = dgl.graph((torch.tensor(src), torch.tensor(dst)))
+    g.edata["r"] = r
+
+    return g
+
+
 
 if __name__=="__main__":
     dump_data(root_dir,triple_path)
