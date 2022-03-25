@@ -9,6 +9,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from tqdm import tqdm
 import pubmed_parser as pp
+from collections import Counter
 
 root_dir = r"data"
 triple_path = r"data/sldb_complete_triple.csv"
@@ -149,6 +150,28 @@ def dump_data(root_dir, triple_path):
                             with open("data/annotated_paper.json", "w", encoding="utf-8") as f:
                                 json.dump(annotated_paper, f, indent=0)
                     pbar.update(1)
+
+# obtain and save statistic graph
+def create_statistic_graph(triple_path):
+    entity_ids = {}
+    relation_ids = {}
+    triple_data = get_triple(triple_path)
+    # count entity
+    entites = list(triple_data["head_name"])+list(triple_data["tail_name"])
+    entities_count = Counter(entites)
+    # count relation
+    relations = list(triple_data["edge_type"])
+    relation_count = Counter(relations)
+
+    # entity_to_id
+    for i, e in enumerate(entities_count):
+        entity_ids[e] = i
+
+    # relation_to_id
+    for i, e in enumerate(relation_count):
+        relation_ids[e] = "R"+str(i)
+
+    # update triple data
 
 if __name__=="__main__":
     dump_data(root_dir,triple_path)
