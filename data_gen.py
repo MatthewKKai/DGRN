@@ -81,6 +81,7 @@ class data_set(Dataset):
             for ent in doc.ents:
                 retokenizer.merge(doc[ent.start:ent.end])
 
+        # entities to ids and graph construction
 
 
         path = dict()
