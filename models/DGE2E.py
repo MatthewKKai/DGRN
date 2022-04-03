@@ -22,7 +22,8 @@ class DGE2E_Encoder(nn.Module):
 
 class DGE2E_Decoder(nn.Moudle):
     def __int__(self):
-        pass
+        self.cell = nn.RNNCell()
+
 
     def decoe(self):
         pass
