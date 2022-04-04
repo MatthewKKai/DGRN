@@ -13,7 +13,7 @@ class DGE2E_Encoder(nn.Module):
     def __init__(self,Config):
         self.config = Config
         self.bio_bert = BertModel.from_pretrained(self.config.bio_bert_path)
-
+        self.dropout = nn.Dropout(self.config.dropout)
 
 
     def encde(self):
