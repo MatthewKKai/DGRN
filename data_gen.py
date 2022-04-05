@@ -3,7 +3,7 @@ import os
 import networkx as nx
 import dgl
 import scispacy, spacy
-from collections import Counter
+from collections import Counter, defaultdict
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
 import Config
@@ -74,7 +74,7 @@ class data_set(Dataset):
         return iter(self.data)
 
     def create_graph(self, doc):
-        graph = dgl.DGLGraph()
+        graph_store = defaultdict(list)
         entity_list = []
         # get entities
         with doc.retokenize() as retokenizer:
@@ -83,7 +83,10 @@ class data_set(Dataset):
 
         # entities to ids and graph construction
 
+        graph = dgl.heterograph(graph_store)
 
+
+        # path construction
         path = dict()
 
 
