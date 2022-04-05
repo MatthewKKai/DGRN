@@ -134,9 +134,6 @@ class data_set(Dataset):
 
 
 
-
-
-
 # def word2id(self, corpus):
 #     bag_of_words = self.word_tokenizer(corpus)
 #     count = sorted(self.counter(bag_of_words))
