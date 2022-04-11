@@ -73,14 +73,17 @@ class data_set(Dataset):
     def __iter__(self):
         return iter(self.data)
 
-    def create_graph(self, doc):
+    def create_graph(self, doc, entity_dict):
         graph_store = defaultdict(list)
         entity_list = []
         # get entities
+        ents = doc.ents
         with doc.retokenize() as retokenizer:
             for ent in doc.ents:
                 retokenizer.merge(doc[ent.start:ent.end])
-
+        for ent in ents:
+            if ent in entity_dict:
+                entity_list.append(ent)
         # entities to ids and graph construction
 
         graph = dgl.heterograph(graph_store)
