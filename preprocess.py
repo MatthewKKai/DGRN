@@ -17,12 +17,12 @@ triple_path = r"data/sldb_complete_triple.csv"
 
 def get_triple(triple_path):
     # entity length too long for processing, drop the relation between these entities
-    drop_rel_list = ["PARTICIPATES_CpD", "PARTICIPATES_GpBP", "PARTICIPATES_GpCC", "PARTICIPATES_GpMF",
-                     "PARTICIPATES_GpPW", "CAUSES_CcSE", "PRESENTS_DpS"]
+    # drop_rel_list = ["PARTICIPATES_CpD", "PARTICIPATES_GpBP", "PARTICIPATES_GpCC", "PARTICIPATES_GpMF",
+    #                  "PARTICIPATES_GpPW", "CAUSES_CcSE", "PRESENTS_DpS"]
     triple_data = pd.read_csv(triple_path, encoding="utf-8", error_bad_lines=False)
-    for drop_item in drop_rel_list:
-        triple_data = triple_data.drop(triple_data[triple_data["edge_type"] == drop_item].index)
-    triple_data = triple_data.reset_index().drop("index", axis=1)
+    # for drop_item in drop_rel_list:
+    #     triple_data = triple_data.drop(triple_data[triple_data["edge_type"] == drop_item].index)
+    # triple_data = triple_data.reset_index().drop("index", axis=1)
     return triple_data
 
 def get_paper_info(corpus_path):
