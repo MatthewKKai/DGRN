@@ -78,13 +78,14 @@ class data_set(Dataset):
         entity_list = []
         # get entities
         ents = doc.ents
-        with doc.retokenize() as retokenizer:
-            for ent in doc.ents:
-                retokenizer.merge(doc[ent.start:ent.end])
+        # with doc.retokenize() as retokenizer:
+        #     for ent in doc.ents:
+        #         retokenizer.merge(doc[ent.start:ent.end])
         for ent in ents:
-            if ent in entity_dict:
+            if str(ent) in entity_dict:
                 entity_list.append(ent)
         # entities to ids and graph construction
+
 
         graph = dgl.heterograph(graph_store)
 
@@ -94,7 +95,7 @@ class data_set(Dataset):
 
 
 
-        return graph, path
+        return graph, path, entity_list
 
 
     def tokenize(self, doc):
