@@ -82,9 +82,19 @@ class data_set(Dataset):
         #     for ent in doc.ents:
         #         retokenizer.merge(doc[ent.start:ent.end])
         for ent in ents:
-            if str(ent) in entity_dict:
+            if str(ent) in entity_dict.keys():
                 entity_list.append(ent)
+
+        # one-hop expansion
+        # for e in entity_list:
+        #     pass
+
         # entities to ids and graph construction
+        node = {}
+        for i, e in enumerate(entity_list):
+            node[e] = i
+
+        edge = {}
 
 
         graph = dgl.heterograph(graph_store)
