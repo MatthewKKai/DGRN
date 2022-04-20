@@ -15,7 +15,4 @@ End-to-End Structure:
   * Encoder with Attention Gate
   * Decoder with graph representation
 
-## RE within Two Paper
-End-to-End Structure:
 
-## Explainable Text Generation
