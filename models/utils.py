@@ -1,6 +1,7 @@
 from torch import nn
 import dgl
 import dgl.nn.pytorch as dglnn
+import torch
 from transformers import BertModel, BertTokenizer
 
 
