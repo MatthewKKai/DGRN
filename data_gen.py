@@ -76,14 +76,22 @@ class data_set(Dataset):
     def create_graph(self, doc, entity_dict):
         graph_store = defaultdict(list)
         entity_list = []
+        rel_dcit = {}
         # get entities
-        ents = doc.ents
+        # ents = doc.ents
         # with doc.retokenize() as retokenizer:
         #     for ent in doc.ents:
         #         retokenizer.merge(doc[ent.start:ent.end])
-        for ent in ents:
-            if str(ent) in entity_dict.keys():
-                entity_list.append(ent)
+        # for ent in ents:
+        #     if str(ent) in entity_dict.keys():
+        #         entity_list.append(ent)
+
+        for sent in doc.sents:
+            ents = sent.ents
+            for ent in ents:
+                if str(ent) in entity_dict.keys():
+                    entity_list.append(ent)
+
 
         # one-hop expansion
         # for e in entity_list:
