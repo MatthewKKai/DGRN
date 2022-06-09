@@ -37,3 +37,17 @@ class DGE2E_Decoder(nn.Moudle):
     def forward(self):
         pass
 
+
+
+class Dynamic_Graph_Generator(nn.Module):
+    def __init__(self):
+        pass
+
+
+
+class Attetntion(nn.Module):
+    def __init__(self):
+        pass
+
+    def forward(self):
+        pass
