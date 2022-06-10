@@ -40,7 +40,10 @@ class DGE2E_Decoder(nn.Moudle):
 
 
 class Dynamic_Graph_Generator(nn.Module):
-    def __init__(self):
+    def __init__(self, entity_ls, G_s):
+        pass
+
+    def forward(self):
         pass
 
 
