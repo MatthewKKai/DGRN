@@ -4,7 +4,7 @@ import scispacy
 import spacy
 import torch
 from torch import nn
-from transformers import BertModel
+from transformers import BertModel, BertForMaskedLM, BertTokenizer, AdamW
 import dgl
 import Config
 from .utils import RelGraphConvLayer, RelEdgeLayer, Attention
@@ -44,17 +44,30 @@ class DGE2E_Decoder(nn.Moudle):
 class Dynamic_Graph_Generator(nn.Module):
     def __init__(self, entity_ls, G_s, config):
         self.config = config
-        self.bio_bert = BertModel.from_pretrained(self.config.bio_bert_path)
+        self.es = entity_ls
+        self.tokenizer = BertTokenizer.from_pretrained(self.config.bio_bert_path)
+        self.masked_model = BertForMaskedLM.from_pretrained(self.config.bio_bert_path)
         # randomly mask entity and generate labels
-        self.labels = np.zeros(len(entity_ls))
-        self.mask = np.random.randint(low=0, high=len(entity_ls), size=(0.2*len(entity_ls),))
-        for i in range(len(entity_ls)):
-            if i in self.mask:
-                self.labels[i] = 1
+        self.mask = np.random.randint(low=0, high=len(self.es), size=(0.2*len(entity_ls),))
+        self.optim = AdamW(self.masked_model.parameters(), lr=5e-5)
 
 
     def forward(self):
-        pass
+        inputs =  self.tokenizer(self.es)
+        # creating labels
+        labels = torch.zeros(inputs.input_ids.detach().size())
+        for i in range(len(self.es)):
+            if i in self.mask:
+                labels[i] = 1
+        inputs["labels"] = torch.tensor(labels, dtype=torch.long)
+        self.optim.zero_grad()
+        outputs = self.masked_model(**inputs)
+        loss = outputs.loss
+        loss.backward()
+        self.optim.step()
+
+        return self.masked_model(**inputs)
+
 
 
 
