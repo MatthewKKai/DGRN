@@ -48,20 +48,20 @@ class Dynamic_Graph_Generator(nn.Module):
         self.tokenizer = BertTokenizer.from_pretrained(self.config.bio_bert_path)
         self.masked_model = BertForMaskedLM.from_pretrained(self.config.bio_bert_path)
         # randomly mask entity and generate labels
-        self.mask = np.random.randint(low=0, high=len(self.es), size=(0.2*len(entity_ls),))
         self.optim = AdamW(self.masked_model.parameters(), lr=5e-5)
 
 
     def forward(self):
         inputs =  self.tokenizer(self.es)
+        # randomly mask 20%
+        rand = torch.rand(inputs.input_ids.shape)
+        mask = (rand<0.2)*(inputs.input_ids!=101)*(inputs.input_ids!=102)
+
         # creating labels
-        labels = torch.zeros(inputs.input_ids.detach().size())
-        for i in range(len(self.es)):
-            if i in self.mask:
-                labels[i] = 1
-        inputs["labels"] = torch.tensor(labels, dtype=torch.long)
+        labels = inputs.input_ids.detach().clone()
+        inputs_ids = inputs["input_ids"]
         self.optim.zero_grad()
-        outputs = self.masked_model(**inputs)
+        outputs = self.masked_model(inputs_ids, attention_masks = mask, labels = labels)
         loss = outputs.loss
         loss.backward()
         self.optim.step()
