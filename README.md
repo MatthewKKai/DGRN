@@ -1,5 +1,6 @@
 # DGE2E
 Daul Graph End to End model for scientific paper informatino extraction.
+Paper appeals soon
 
 ## Requisite
  * Transformers
