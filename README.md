@@ -1,6 +1,7 @@
 # DGRN
-Biomedical Knowledge Derivation from Scientific Publications via Dual-Graph Resonance.
-Paper appeals soon
+Source Code for paper "Biomedical Knowledge Derivation from Scientific Publications via Dual-Graph Resonance."
+
+Paper appeals soon.
 
 ## Requisite
  * Transformers
