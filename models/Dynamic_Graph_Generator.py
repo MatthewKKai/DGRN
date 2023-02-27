@@ -42,7 +42,13 @@ class Dynamic_Graph_Generator(nn.Module):
         self.optim.zero_grad()
         outputs = self.masked_model(inputs_ids, attention_masks = mask, labels = labels)
         loss = outputs.loss
-        loss.backward()
-        self.optim.step()
+        expanded_es = self.es
+        for expanded_e in outputs:
+             if expanded_e is not in self.es:
+                 expanded_es.append(expanded_e)
 
-        return self.masked_model(**inputs)
+        # loss.backward()
+        # self.optim.step()
+
+        # return self.masked_model(**inputs)
+        return loss, expanded_es
