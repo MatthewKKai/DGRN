@@ -153,40 +153,40 @@ def dump_data(root_dir, triple_path):
                     pbar.update(1)
 
 # obtain and save statistic graph
-def create_statistic_graph(triple_path):
-    entity_ids = {}
-    relation_ids = {}
-    triple_data = get_triple(triple_path)
-    # count entity
-    entites = list(triple_data["head_name"])+list(triple_data["tail_name"])
-    entities_count = Counter(entites)
-    # count relation
-    relations = list(triple_data["edge_type"])
-    relation_count = Counter(relations)
-
-    # entity_to_id
-    for i, e in enumerate(entities_count):
-        entity_ids[e] = i
-
-    # relation_to_id
-    for i, e in enumerate(relation_count):
-        relation_ids[e] = "R"+str(i)
-
-    # create graph (src, dst)
-    src = []
-    dst = []
-    r = []
-    for item in triple_data:
-        head_name = item["head_name"]
-        tail_name = item["tail_name"]
-        relation = item["edge_type"]
-        src.append(entity_ids[head_name])
-        dst.append(entity_ids[tail_name])
-        r.append(relation_ids[relation])
-    g = dgl.graph((torch.tensor(src), torch.tensor(dst)))
-    g.edata["r"] = r
-
-    return g
+# def create_statistic_graph(triple_path):
+#     entity_ids = {}
+#     relation_ids = {}
+#     triple_data = get_triple(triple_path)
+#     # count entity
+#     entites = list(triple_data["head_name"])+list(triple_data["tail_name"])
+#     entities_count = Counter(entites)
+#     # count relation
+#     relations = list(triple_data["edge_type"])
+#     relation_count = Counter(relations)
+#
+#     # entity_to_id
+#     for i, e in enumerate(entities_count):
+#         entity_ids[e] = i
+#
+#     # relation_to_id
+#     for i, e in enumerate(relation_count):
+#         relation_ids[e] = "R"+str(i)
+#
+#     # create graph (src, dst)
+#     src = []
+#     dst = []
+#     r = []
+#     for item in triple_data:
+#         head_name = item["head_name"]
+#         tail_name = item["tail_name"]
+#         relation = item["edge_type"]
+#         src.append(entity_ids[head_name])
+#         dst.append(entity_ids[tail_name])
+#         r.append(relation_ids[relation])
+#     g = dgl.graph((torch.tensor(src), torch.tensor(dst)))
+#     g.edata["r"] = r
+#
+#     return g
 
 
 

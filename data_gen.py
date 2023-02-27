@@ -10,10 +10,9 @@ import Config
 
 # Create dataset for Dataloader and model
 class data_set(Dataset):
-    def __int__(self, data_path, max_length, Config):
+    def __int__(self, dataset, entity2ids,max_length, Config):
         super(data_set, self).__int__()
-        self.data_path = data_path
-        self.data = []
+        self.data = dataset
         self.INTER_EDGE = 0
         self.INTRA_EDGE = 1
         self.config = Config
@@ -24,19 +23,9 @@ class data_set(Dataset):
             print(e)
             print("Please Using 'en_ner_bionlp13cg_md' version")
         self.max_length = max_length
-
-        if os.path.exists(self.data_path):
-            with open(self.data_path, "r", encoding="utf-8") as f:
-                try:
-                    ori_data = json.load(data_path)
-                except Exception as e:
-                    print(e)
-        else:
-            pass
-
         # slef.data[index] = [{paper:{graph:graph, path:path_info, abstract:{}, intro:{}, citances:{}}, label:triple}]
 
-        for i, data_item in enumerate(ori_data):
+        for i, data_item in enumerate(dataset):
             paper = {}
 
             doc_paper = self.nlp(data_item["paper"]["abstract"] + data_item["paper"]["intro"] + data_item["paper"]["citances"])
@@ -65,13 +54,15 @@ class data_set(Dataset):
 
 
     def __getitem__(self, index):
-        return self.data[index]
+        x = self.data[index]["paper"]
+        y = self.data[index]["triple"]
+        return x, y
 
     def __len__(self):
         return len(self.data)
 
-    def __iter__(self):
-        return iter(self.data)
+    # def __iter__(self):
+    #     return iter(self.data)
 
     def create_graph(self, doc, entity_dict):
         graph_store = defaultdict(list)

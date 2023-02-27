@@ -4,17 +4,17 @@ import os
 
 import numpy as np
 
-data_dir = '../data_/'
+data_dir = '../data/'
 # prepro_dir = os.path.join(data_dir, 'prepro_data/')
 # if not os.path.exists(prepro_dir):
 #     os.mkdir(prepro_dir)
 
-rel2id = json.load(open(os.path.join(data_dir, 'rel2id.json'), "r"))
-id2rel = {v: k for k, v in rel2id.items()}
-word2id = json.load(open(os.path.join(data_dir, 'word2id.json'), "r"))
-ner2id = json.load(open(os.path.join(data_dir, 'ner2id.json'), "r"))
-
-word2vec = np.load(os.path.join(data_dir, 'vec.npy'))
+# rel2id = json.load(open(os.path.join(data_dir, 'rel2id.json'), "r"))
+# id2rel = {v: k for k, v in rel2id.items()}
+# word2id = json.load(open(os.path.join(data_dir, 'word2id.json'), "r"))
+# ner2id = json.load(open(os.path.join(data_dir, 'ner2id.json'), "r"))
+#
+# word2vec = np.load(os.path.join(data_dir, 'vec.npy'))
 
 
 def get_opt():
@@ -24,6 +24,8 @@ def get_opt():
     parser.add_argument('--train_set', type=str, default=os.path.join(data_dir, 'train_annotated.json'))
     parser.add_argument('--dev_set', type=str, default=os.path.join(data_dir, 'dev.json'))
     parser.add_argument('--test_set', type=str, default=os.path.join(data_dir, 'test.json'))
+    parser.add_argument('--entity2ids', type=str, default=os.path.join(data_dir, "entities2ids.json"))
+    parser.add_argument('--rel2ids', type=str, default=os.path.join(data_dir, "rel2ids.json"))
 
     # # save path of preprocessed datasets
     # parser.add_argument('--train_set_save', type=str, default=os.path.join(prepro_dir, 'train.pkl'))
